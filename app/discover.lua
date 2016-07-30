@@ -1,4 +1,5 @@
 #!/usr/bin/env tarantool
+
 local mqtt    = require("mqtt")
 local fiber   = require("fiber")
 local json    = require("json")
@@ -25,7 +26,8 @@ local device_caps = {
 local function get_device_abilities(ability)
    local res = {}
    for i, cap in pairs(device_caps) do
-      if  bit.band(ability, bit.lshift(1, i)) then
+      local mask = bit.lshift(1, i-1)
+      if bit.band(ability, mask) ~= 0 then
          table.insert(res, cap)
       end
    end
@@ -33,45 +35,31 @@ local function get_device_abilities(ability)
 end
 
 local function message_handler(id, topic, message)
-   util.log(topic)
    local parts = util.split(topic, "/")
-   util.log(parts)
    if #parts < 3 then
       return
    end
 
    local addr = parts[3]
 
-   if addr == "get" then
+   if not string.find(addr, ":") then
       return
    end
 
-   util.log(addr)
-   util.log(message)
-
    local fixed_data = "[" .. message:sub(2, -2) .. "]"
-
-   util.log(fixed_data)
-
    local data = json.decode(fixed_data)
+
    local dict = {}
-   for d in fixed_data do
-      --util.merge(dict, d)
+   for i,d in pairs(data) do
+      util.merge(dict, d)
    end
 
-   util.log("DATA")
-
-   util.log(dict)
-   util.log(dict.ability)
-
-   local ability = tonumber(data.ability, 16)
-
-   util.log(ability)
-
+   local ability = tonumber(dict.ability, 16)
    local caps = get_device_abilities(ability)
 
-   util.log("CAPS")
-   util.log(caps)
+   local last_seen = tonumber(dict.last_seen, 10)
+
+   util.log("Found device at "..addr.." with caps: "..table.concat(caps, ",").." last seen: "..last_seen)
 end
 
 local function discover()
@@ -98,7 +86,8 @@ local function discover()
 end
 
 local function main()
-   fiber.create(discover)
+   --fiber.create(discover)
+   discover()
 end
 
 main()

@@ -1,5 +1,6 @@
 local M = {}
 
+local json    = require("json")
 local logging = require("log")
 
 function M.log(msg)
