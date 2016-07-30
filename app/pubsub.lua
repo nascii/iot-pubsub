@@ -1,11 +1,7 @@
 #!/usr/bin/env tarantool
-local mqtt  = require("mqtt")
-local fiber = require("fiber")
-
-local devices = {
-   one = { host = "100.100.150.184", port = 1883 },
-   two = { host = "100.100.150.96",  port = 1883 },
-}
+local mqtt   = require("mqtt")
+local fiber  = require("fiber")
+local config = require("config")
 
 local function log(msg)
    local encoder = require("json")
@@ -18,7 +14,7 @@ local function message_handler(id, topic, message)
          id,
          topic,
          message,
-   })
+ })
 end
 
 local function loop()
@@ -53,7 +49,7 @@ local function pubsub(device)
 end
 
 local function main()
-   for _, v in pairs(devices) do
+   for _, v in pairs(config.devices) do
       pubsub(v)
    end
 end
