@@ -5,6 +5,7 @@ local fiber   = require("fiber")
 local json    = require("json")
 local util    = require("lib/util")
 local bit     = require("bit")
+local clock   = require("clock")
 local config  = require("config")
 
 local device_caps = {
@@ -57,7 +58,7 @@ local function message_handler(id, topic, message)
    local ability = tonumber(dict.ability, 16)
    local caps = get_device_abilities(ability)
 
-   local last_seen = tonumber(dict.last_seen, 10)
+   local last_seen = math.floor(clock.time()) - tonumber(dict.last_seen, 10)
 
    util.log("Found device at "..addr.." with caps: "..table.concat(caps, ",").." last seen: "..last_seen)
 end
