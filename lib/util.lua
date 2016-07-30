@@ -3,8 +3,12 @@ local M = {}
 local json    = require("json")
 local logging = require("log")
 
-function M.log(msg)
-   logging.info(json.encode(msg))
+function M.log(...)
+   logging.info(json.encode({...}))
+end
+
+function M.debug(...)
+   logging.debug(json.encode({...}))
 end
 
 function M.split(str, pat)
