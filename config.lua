@@ -3,6 +3,9 @@ local config = {
       addr = "0.0.0.0",
       port = 8888,
    },
+   mqtt = {
+      port = 1883,
+   },
    devices = {
       -- Edison devices
       { host = "100.100.150.184", port = 1883 },
