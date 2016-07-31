@@ -4,15 +4,11 @@ local server = require("http.server")
 local json   = require("json")
 local config = require("config")
 
-local devices_mock = {
-   {
-      id       = "fe80::5054:ff:fecb:288c",
-      lastSeen = 666,
-      caps     = {
-         "tempterature"
-      }
-   }
-}
+box.cfg({
+      slab_alloc_arena = 0.3
+})
+
+local devices = require("models/devices"):new(box.schema)
 
 local function json_response(body, code)
    return {
@@ -23,7 +19,14 @@ local function json_response(body, code)
 end
 
 local function get_devices(request)
-   return json_response(devices_mock, 200)
+   local devices_table = devices:get_all()
+   local code          = 200
+
+   if not devices_table then
+      code = 404
+   end
+
+   return json_response(devices_table, code)
 end
 
 local function main()
@@ -44,9 +47,6 @@ local function main()
    )
 
    server:start()
-
-   -- Initing database
-   box.cfg()
 end
 
 main()
