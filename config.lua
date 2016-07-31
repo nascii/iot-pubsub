@@ -1,7 +1,8 @@
 local config = {
    http = {
-      addr = "0.0.0.0",
-      port = 8888,
+      addr    = "0.0.0.0",
+      port    = 80,
+      options = { app_dir = "./app" }
    },
    mqtt = {
       port = 1883,

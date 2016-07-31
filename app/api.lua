@@ -29,7 +29,13 @@ end
 local function main()
    local server = server.new(
       config.http.addr,
-      config.http.port
+      config.http.port,
+      config.http.options
+   )
+
+   server:route(
+      { path = "/" },
+      function(request) return request:redirect_to("/index.html") end
    )
 
    server:route(
