@@ -1,4 +1,7 @@
 local config = {
+   tarantool = {
+      slab_alloc_arena = 0.3
+   },
    http = {
       addr    = "0.0.0.0",
       port    = 80,

@@ -4,9 +4,7 @@ local server = require("http.server")
 local json   = require("json")
 local config = require("config")
 
-box.cfg({
-      slab_alloc_arena = 0.3
-})
+box.cfg(config.tarantool)
 
 local devices = require("models/devices"):new(box.schema)
 

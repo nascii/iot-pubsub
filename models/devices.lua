@@ -22,7 +22,7 @@ function M:get_by_ip(ip)
 end
 
 function M:get_all()
-   return self.space.index.id:select({})
+   return self.space:select({})
 end
 
 function M:upsert(device)
