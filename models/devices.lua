@@ -1,5 +1,7 @@
 local M = {}
 
+local tarantool = require("lib/tarantool")
+
 function M:new(schema)
    local space = schema.space.create(
       "device",
@@ -22,11 +24,15 @@ function M:get_by_ip(ip)
 end
 
 function M:get_all()
-   return self.space:select({})
+   local res = {}
+   for _, v in pairs(self.space:select({})) do
+      table.insert(res, tarantool.normalize(v))
+   end
+   return res
 end
 
 function M:upsert(device)
-   return self.space:put({ device.addr, device })
+   return tarantool.normalize(self.space:put({ device.addr, device }))
 end
 
 return M

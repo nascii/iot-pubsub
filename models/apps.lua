@@ -1,12 +1,7 @@
 local M = {}
 
-local util = require("lib/util")
-
-local function normalize(res)
-   local data = { id = res[1] }
-   util.merge(data, res[2])
-   return data
-end
+local util      = require("lib/util")
+local tarantool = require("lib/tarantool")
 
 function M:new(schema)
    local space = schema.space.create(
@@ -27,23 +22,23 @@ function M:new(schema)
 end
 
 function M:get_by_id(id)
-   return normalize(self.space.index.id:get(id))
+   return tarantool.normalize(self.space.index.id:get(id))
 end
 
 function M:get_all()
    local res = {}
    for _, v in pairs(self.space:select({})) do
-      table.insert(res, normalize(v))
+      table.insert(res, tarantool.normalize(v))
    end
    return res
 end
 
 function M:insert(app)
-   return normalize(self.space:auto_increment({ app }))
+   return tarantool.normalize(self.space:auto_increment({ app }))
 end
 
 function M:upsert(id, app)
-   return normalize(self.space:put({ id, app }))
+   return tarantool.normalize(self.space:put({ id, app }))
 end
 
 return M
