@@ -44,6 +44,9 @@ local function main()
    )
 
    server:start()
+
+   -- Initing database
+   box.cfg()
 end
 
 main()
