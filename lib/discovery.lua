@@ -52,7 +52,7 @@ local function message_handler(id, topic, message)
    return {
       addr      = addr,
       caps      = caps,
-      cast_seen = last_seen,
+      last_seen = last_seen,
    }
 end
 
