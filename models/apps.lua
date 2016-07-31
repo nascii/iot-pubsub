@@ -31,7 +31,11 @@ function M:get_by_id(id)
 end
 
 function M:get_all()
-   return self.space:select({})
+   local res = {}
+   for _, v in pairs(self.space:select({})) do
+      table.insert(res, normalize(v))
+   end
+   return res
 end
 
 function M:insert(app)

@@ -9,11 +9,6 @@ local util    = require("lib/util")
 local clock   = require("clock")
 local device  = require("lib/device")
 
-M.channels = {
-   broadcast = "devices/#",
-   discovery = "devices/Edison/get",
-}
-
 M.tick = 3
 
 function M.get_device_addr(topic)
@@ -56,7 +51,7 @@ local function message_handler(id, topic, message)
    }
 end
 
-function M.discover(broker, on_device)
+function M.discover(broker, channels, on_device)
    local ok, msg
    mq = mqtt.new()
 
@@ -77,15 +72,15 @@ function M.discover(broker, on_device)
 
    util.log("connected", broker, ok, msg)
 
-   ok, msg = mq:subscribe(M.channels.broadcast)
+   ok, msg = mq:subscribe(channels.broadcast)
    if not ok then
-      error("failed to subscribe to " .. M.channels.broadcast)
+      error("failed to subscribe to " .. channels.broadcast)
    end
 
-   util.log("subscribed to " .. M.channels.broadcast, ok, msg)
+   util.log("subscribed to " .. channels.broadcast, ok, msg)
 
    while true do
-      ok, msg = mq:publish(M.channels.discovery, "1")
+      ok, msg = mq:publish(channels.discovery, "1")
       util.log("sent discovery request", ok, msg)
       fiber.sleep(M.tick)
    end

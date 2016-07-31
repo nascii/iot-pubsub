@@ -17,5 +17,6 @@ discovery.discover(
       host = "0.0.0.0",
       port = config.mqtt.port,
    },
+   config.mqtt.channels,
    on_device
 )

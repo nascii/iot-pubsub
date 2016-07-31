@@ -9,11 +9,11 @@ local config = {
    },
    mqtt = {
       port = 1883,
-   },
-   devices = {
-      -- Edison devices
-      { host = "100.100.150.184", port = 1883 },
-      { host = "100.100.150.96",  port = 1883 },
+      channels = {
+         broadcast = "devices/#",
+         edison    = "devices/Edison",
+         discovery = "devices/Edison/get",
+      }
    }
 }
 
